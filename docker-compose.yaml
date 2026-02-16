@@ -11,10 +11,10 @@ services:
       KAFKA_PROCESS_ROLES: 'broker,controller'
       CLUSTER_ID: '1L6g7nGhU-eAKfL--X25wo'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
-      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,PLAINTEXT_HOST://0.0.0.0:29092'
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092'
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:29092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_LOG_DIRS: '/var/lib/kafka/data'
@@ -62,13 +62,24 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+      
   api:
     build: ./api
     ports:
       - '8000:8000'
     container_name: api
-    environment: {}
-
+    environment:
+      - MONGO_URL=mongodb://root:root123@mongodb:27017/
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - REDIS_HOST=redis
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redic:
+        condition: service_healthy
 
   worker_kitchen:
     container_name: worker_kitchen
