@@ -31,6 +31,9 @@ try:
             value = msg.value().decode("utf-8")
             data = json.loads(value)
 
+            #slep דימוי אבטחת המטען:
+            time.sleep(15)
+
             #  decod from kafka:
             #  {'order_id': 'order_1001',
             #  'pizza_type': 'Margherita', 
