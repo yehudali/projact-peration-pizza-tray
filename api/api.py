@@ -13,7 +13,7 @@ import redis
 ## env's:
 MONGO_URL = os.getenv('MONGO_URL', "mongodb://root:root123@localhost:27017/")
 KAFKA_HOST = os.getenv("KAFKA_HOST", "localhost")
-KAFKA_FORT = os.getenv('KAFKA_FORT', '29092')
+KAFKA_PORT = os.getenv('KAFKA_PORT', '29092')
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 ## fastapi
 app = FastAPI()
@@ -24,7 +24,7 @@ db = claient['projact-peration-pizza-tray']
 coll = db['orders']
 
 ## kafka
-CONFIG_PRODUCAR:dict = {"bootstrap.servers":f'{KAFKA_HOST}:{KAFKA_FORT}'}
+CONFIG_PRODUCAR:dict = {"bootstrap.servers":f'{KAFKA_HOST}:{KAFKA_PORT}'}
 producer = Producer(CONFIG_PRODUCAR)
 
 ## redis
