@@ -78,18 +78,19 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      redic:
+      redis:
         condition: service_healthy
 
   worker_kitchen:
     container_name: worker_kitchen
     build: ./worker_kitchen
-    environment: {}
+    environment:
+      - MONGO_URL=mongodb://root:root123@mongodb:27017/
 
-  worker_text:
-    container_name: worker_text
-    build: ./worker_text
-    environment: {}
+  # worker_text:
+  #   container_name: worker_text
+  #   build: ./worker_text
+  #   environment: {}
 
 
 volumes:
