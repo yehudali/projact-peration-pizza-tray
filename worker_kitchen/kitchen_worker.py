@@ -5,7 +5,8 @@ from pymongo import MongoClient
 import time
 
 ## mongo
-client =  MongoClient()
+MONGO_URL = os.getenv('MONGO_URL', 'mongodb://root:root123@localhost:27017/')
+client =  MongoClient(MONGO_URL)
 db = client['projact-peration-pizza-tray'] 
 coll = db['orders']
 
@@ -16,7 +17,7 @@ conf:dict = {'bootstrap.servers':KAFKA_BOOTSTRAP_SERVERS,
     "auto.offset.reset": "earliest"}
 
 consumer = Consumer(conf)
-consumer.subscribe(['orders'])
+consumer.subscribe(['pizza-orders'])
 try:
     while True:
         msg = consumer.poll(timeout=1.0)
@@ -29,14 +30,23 @@ try:
         try:
             value = msg.value().decode("utf-8")
             data = json.loads(value)
-            print(f"The data out of KAFKA: {data}")
+
+            #  decod from kafka:
+            #  {'order_id': 'order_1001',
+            #  'pizza_type': 'Margherita', 
+            # 'size': 'Medium', 'quantity': 1,
+            #  'is_delivery': False,
+            #  'special_instructions': 'The eagle has landed. Leave the box at the designated dead drop.', 
+            # 'status': 'PREPARING'}
 
             # updat to mongo:
-            # try:
-            #     # x = coll.update_one({}, {$set:{UPDATED_DATA}})
-            #     # print('is insert to mongo:{x}')
-            # except Exception as e:
-            #     print(f"insert to mongo err:{e}")
+            try:
+                id = data['order_id']
+                is_in = coll.update_one({"order_id":id},{"$set":{"status":"DELIVERED"}})
+                print(is_in)
+                
+            except Exception as e:
+                print(f"insert to mongo err:{e}")
 
         except Exception as e:
             print(e)
