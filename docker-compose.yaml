@@ -86,7 +86,10 @@ services:
     build: ./worker_kitchen
     environment:
       - MONGO_URL=mongodb://root:root123@mongodb:27017/
-
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+      - REDIS_HOST=redis
+      
   # worker_text:
   #   container_name: worker_text
   #   build: ./worker_text

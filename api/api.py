@@ -85,5 +85,5 @@ def get_order_by_id(order_id:str):
             return {"source": "mongo","valu": order}
         except  Exception as e:
             print(e)
-            return {"DCDCDc":"sdc"}
+            return {"error":"{e}"}
 
