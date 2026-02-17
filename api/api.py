@@ -87,7 +87,3 @@ def get_order_by_id(order_id:str):
             print(e)
             return {"DCDCDc":"sdc"}
 
-    
-
-if __name__ == "__main__":
-    uvicorn.run("api:app", reload=True)
